@@ -21,8 +21,7 @@ You can change the default port in the appsettings.json file.
 ```json
 {
 	"LoggingServer": {
-		"Port": 5000
-		// Change the port here
+		"Port": 5000 // Change the port here
 	}
 }
 ```
@@ -36,7 +35,6 @@ You can include the logger using our CDN link in your HTML file or using ES6 Mod
 Html:
 
 ```html
-
 <script src="https://cdn.jsdelivr.net/gh/drew-chase/LoggingServer@{version}/LoggingServer/wwwroot/js/Logger.js"></script>
 ```
 
@@ -74,4 +72,52 @@ You will receive a confirmation response upon the successful logging of the mess
 > - The host in the context of this server refers to the hostname of the user of the logging server where the logs originate from. The date is optional in the queryParams. If the date is not provided, the current date will be used to search the logs.
 > - Make sure to replace 'your-host' and 'INFO' with your host name and desired log type.
 
+# NGINX Configuration
 
+```nginx
+
+map $http_connection $connection_upgrade {
+    "~*Upgrade" $http_connection;
+    default keep-alive;
+}
+server {
+    listen 80;
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
+    listen [::]:80;
+    server_name logging.example.com;
+
+    location / {
+        proxy_pass http://127.0.0.1:5000/;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection $connection_upgrade;
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+```
+# Apache Configuration
+
+```apache
+<VirtualHost *:80>
+    ServerName logging.example.com
+
+    <Location />
+        # ProxyPass to your .NET Core App
+        ProxyPassReverse http://127.0.0.1:5000
+        ProxyPassReverse http://127.0.0.1:5000
+
+        # Ensure that Apache will pass the host header
+        ProxyPreserveHost On
+
+        # Optional: Set maximum transmission time
+        ProxyTimeout 600
+    </Location>
+
+    ErrorLog ${APACHE_LOG_DIR}/logging_error.log
+    CustomLog ${APACHE_LOG_DIR}/logging_access.log combined
+</VirtualHost>
+```

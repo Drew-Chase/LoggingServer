@@ -1,4 +1,9 @@
-﻿const LogTypes = {
+﻿/**
+ * Represents the available types of log messages.
+ * @enum {string}
+ * @readonly
+ */
+const LogTypes = {
     DEBUG: 'DEBUG',
     INFO: 'INFO',
     ERROR: 'ERROR',
@@ -6,6 +11,9 @@
     FATAL: 'FATAL',
 };
 
+/**
+ * Logger class for logging messages and sending them to a log server.
+ */
 export class Logger {
 
 

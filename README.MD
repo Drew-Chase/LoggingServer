@@ -14,6 +14,16 @@ LoggingServer is a centralized logging service implemented in C# and .NET Core t
 2. GET `/{host}/{type}` : Fetches logs of a specific type for a given `host`.
 3. POST `/{host}/{type}` : Appends a new log message of a given `type` for a specified `host`.
 
+## Change the Port
+You can change the default port in the appsettings.json file.
+```json
+{
+  "LoggingServer": {
+    "Port": 5000 // Change the port here
+  }
+}
+```
+
 ## Client usage
 
 A client-side JavaScript logging API is available. It logs different types of messages to the console, and also sends them to the LoggingServer.

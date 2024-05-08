@@ -35,6 +35,7 @@ You can include the logger using our CDN link in your HTML file or using ES6 Mod
 Html:
 
 ```html
+
 <script src="https://cdn.jsdelivr.net/gh/drew-chase/LoggingServer@{version}/LoggingServer/wwwroot/js/Logger.js"></script>
 ```
 
@@ -99,6 +100,7 @@ server {
     }
 }
 ```
+
 # Apache Configuration
 
 ```apache
@@ -120,4 +122,50 @@ server {
     ErrorLog ${APACHE_LOG_DIR}/logging_error.log
     CustomLog ${APACHE_LOG_DIR}/logging_access.log combined
 </VirtualHost>
+```
+
+# Windows
+Just run the executable file.
+
+# Linux Service
+
+Create a systemd service file to run the LoggingServer as a service.
+File path: `/etc/systemd/system/logging-server.service` and write this:
+
+```systemd
+[Unit]
+Description=HTTP Logging Server
+After=network.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+User=www-data # Change this to your user
+WorkingDirectory=/path/to/LoggingServer/
+ExecStart=/path/to/LoggingServer/LoggingServer
+
+[Install]
+WantedBy=multi-user.target
+```
+
+Then run the following commands:
+
+Reload the systemd daemon:
+
+```bash
+sudo systemctl daemon-reload
+```
+
+Enable the service (to start on boot):
+
+```bash
+sudo systemctl enable logging-server
+```
+
+Start the service:
+
+```bash
+sudo systemctl start logging-server
 ```

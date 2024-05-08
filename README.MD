@@ -15,12 +15,15 @@ LoggingServer is a centralized logging service implemented in C# and .NET Core t
 3. POST `/{host}/{type}` : Appends a new log message of a given `type` for a specified `host`.
 
 ## Change the Port
+
 You can change the default port in the appsettings.json file.
+
 ```json
 {
-  "LoggingServer": {
-    "Port": 5000 // Change the port here
-  }
+	"LoggingServer": {
+		"Port": 5000
+		// Change the port here
+	}
 }
 ```
 
@@ -28,7 +31,23 @@ You can change the default port in the appsettings.json file.
 
 A client-side JavaScript logging API is available. It logs different types of messages to the console, and also sends them to the LoggingServer.
 
-Example usage:
+Example usage:   
+You can include the logger using our CDN link in your HTML file or using ES6 Module import.
+Html:
+
+```html
+
+<script src="https://cdn.jsdelivr.net/gh/drew-chase/LoggingServer@{version}/LoggingServer/wwwroot/js/Logger.js"></script>
+```
+
+or ES6 Module:
+
+```javascript
+import Logger from 'https://cdn.jsdelivr.net/gh/drew-chase/LoggingServer@{version}/LoggingServer/wwwroot/js/Logger.js';
+```
+
+> ## Note:
+> Make sure to replace `{version}` with the version of the logger that you are using.
 
 ```javascript
 const logger = new Logger('https://your-loggingservice-host.com');
